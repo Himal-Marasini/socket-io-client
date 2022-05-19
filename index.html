@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Socket.io</title>
+    <script
+      src="https://cdn.socket.io/4.5.0/socket.io.min.js"
+      integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <h2>Socket io client</h2>
+
+    <button class="btn1">Joined</button>
+
+    <script>
+      const socket = io("http://localhost:4001", {
+        transportOptions: {
+          polling: {
+            extraHeaders: {
+              Authorization:
+                "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVjMDAyYjBhLTQ5NzMtNGYwNy04ODQ0LWNmYTE0YWY5OTYyZSIsImlhdCI6MTY1Mjg2MzMzMiwiZXhwIjoxNjUyOTQ5NzMyfQ.ZmNDjTRt3oMPh83AVocH9FiMDE0BcMZuMvCPoDKIozw",
+            },
+          },
+        },
+      });
+
+      socket.on("transaction:create_response", (payload) => {
+        console.log(payload);
+      });
+
+      let request = {
+        price_used: 0.1,
+        game_id: "7a97e0fd-985b-4cfd-ac3b-03a9f4b0ad5a",
+        won_amount: 0,
+        room_id: null,
+      };
+
+      socket.emit("transaction:create", request);
+
+      socket.on("connect_error", (err) => console.error(err.message));
+      socket.on("connect_failed", (err) => console.error(err));
+      socket.on("disconnect", (err) => console.error(err));
+
+      let btn1 = document.querySelector(".btn1");
+
+      btn1.addEventListener("click", (el) => {
+        socket.emit("player:joined", {
+          game_id: "7a97e0fd-985b-4cfd-ac3b-03a9f4b0ad5a",
+        });
+      });
+    </script>
+  </body>
+</html>
