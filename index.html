@@ -15,14 +15,15 @@
     <h2>Socket io client</h2>
 
     <button class="btn1">Joined</button>
+    <button class="btn2">Exit</button>
 
     <script>
-      const socket = io("http://localhost:4001", {
+      const socket = io("http://localhost:4000", {
         transportOptions: {
           polling: {
             extraHeaders: {
               Authorization:
-                "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVjMDAyYjBhLTQ5NzMtNGYwNy04ODQ0LWNmYTE0YWY5OTYyZSIsImlhdCI6MTY1Mjg2MzMzMiwiZXhwIjoxNjUyOTQ5NzMyfQ.ZmNDjTRt3oMPh83AVocH9FiMDE0BcMZuMvCPoDKIozw",
+                "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVjMDAyYjBhLTQ5NzMtNGYwNy04ODQ0LWNmYTE0YWY5OTYyZSIsImlhdCI6MTY1NjA2NjIwNiwiZXhwIjoxNjU2MTUyNjA2fQ.PFi-jpZTzP3yAPNndoW2Scqr190hpONn9sPC7Ywvn-E",
             },
           },
         },
@@ -34,22 +35,41 @@
 
       let request = {
         price_used: 0.1,
-        game_id: "7a97e0fd-985b-4cfd-ac3b-03a9f4b0ad5a",
+        game_id: "ac632241-b95c-48cb-a0e7-71d60544b7c6",
         won_amount: 0,
-        room_id: null,
+        room_id: "ac632241-b95c-48cb-a0e7-71d60544b7c6",
+        transaction_id: "41a5d738-b948-4dbb-aba4-c7ed2fc71b21",
       };
-
-      socket.emit("transaction:create", request);
 
       socket.on("connect_error", (err) => console.error(err.message));
       socket.on("connect_failed", (err) => console.error(err));
       socket.on("disconnect", (err) => console.error(err));
 
+      socket.on("error", function (e) {
+        // if (e.error() != "websocket: close sent") {
+        console.log("An unexpected error occured: ", e.error());
+        // }
+      });
+
       let btn1 = document.querySelector(".btn1");
+      let btn2 = document.querySelector(".btn2");
 
       btn1.addEventListener("click", (el) => {
-        socket.emit("player:joined", {
-          game_id: "7a97e0fd-985b-4cfd-ac3b-03a9f4b0ad5a",
+        socket.emit("transaction:create", request);
+
+        // socket.emit("player:joined", {
+        //   game_id: "7a97e0fd-985b-4cfd-ac3b-03a9f4b0ad5a",
+        // });
+      });
+
+      btn2.addEventListener("click", (el) => {
+        socket.emit("player:disconnect", {
+          room_id: "ac632241-b95c-48cb-a0e7-71d60544b7c6",
+          transaction_id: "41a5d738-b948-4dbb-aba4-c7ed2fc71b21",
+        });
+
+        socket.on("player:disconnected_response", (payload) => {
+          console.log(payload);
         });
       });
     </script>
