@@ -19,30 +19,33 @@
 
     <script>
       let url = "http://localhost:4000";
-      let url_cloud = "http://3.236.80.43";
+      let url_cloud = "http://ec2-3-236-80-43.compute-1.amazonaws.com";
 
-      // var socket = io(
-      //   "http://ec2-3-236-80-43.compute-1.amazonaws.com/api1/v1",
-      //   {
-      //     path: "/api1/v1/socket.io",
-      //   },
-      // );
-
-      // var socket = io("http://ec2-3-236-80-43.compute-1.amazonaws.com", {
-      //   path: "/api1/admin/socket.io",
-      // });
-
-      const socket = io(url_cloud, {
-        // path: "/admin/socket.io",
-        path: "/api1/admin/socket.io",
+      const socket = io(url, {
+        path: "/admin/socket.io",
+        // path: "/api1/admin/socket.io",
+        transports: ["websocket"],
         transportOptions: {
           polling: {
             extraHeaders: {
-              Authorization:
-                "Bearer yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVjMDAyYjBhLTQ5NzMtNGYwNy04ODQ0LWNmYTE0YWY5OTYyZSIsImlhdCI6MTY1NjM5NDU4MCwiZXhwIjoxNjU2NDgwOTgwfQ.syvy7TkoKMb0gFWGvekECs4iCoNkd6k9p9BCv38qe9c",
+              Authorization: "abc",
             },
           },
         },
+
+        // extraHeaders: {
+        //   Authorization:
+        //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVjMDAyYjBhLTQ5NzMtNGYwNy04ODQ0LWNmYTE0YWY5OTYyZSIsImlhdCI6MTY1NjQ5NjM2OSwiZXhwIjoxNjU2NTgyNzY5fQ.hrx54zf7wB9LF0Q5tmPSorkw4Z7cIEbbrQ-pK4ilLHE",
+        // },
+
+        // transportOptions: {
+        //   polling: {
+        //     extraHeaders: {
+        //       Authorization:
+        //         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVjMDAyYjBhLTQ5NzMtNGYwNy04ODQ0LWNmYTE0YWY5OTYyZSIsImlhdCI6MTY1NjQ5NjM2OSwiZXhwIjoxNjU2NTgyNzY5fQ.hrx54zf7wB9LF0Q5tmPSorkw4Z7cIEbbrQ-pK4ilLHE",
+        //     },
+        //   },
+        // },
       });
 
       socket.on("transaction:create_response", (payload) => {
